@@ -1,13 +1,13 @@
 function handleMessage(request) {
   if ( request && request.closeWebPage === true && request.isSuccess === true ) {
     /* Set username */
-    chrome.storage.local.set({ leethub_username: request.username });
+    chrome.storage.local.set({ leettogit_username: request.username });
 
     /* Set token */
-    chrome.storage.local.set({ leethub_token: request.token });
+    chrome.storage.local.set({ leettogit_token: request.token });
 
     /* Close pipe */
-    chrome.storage.local.set({ pipe_leethub: false }, () => {
+    chrome.storage.local.set({ pipe_leettogit: false }, () => {
       console.log('Closed pipe.');
     });
 

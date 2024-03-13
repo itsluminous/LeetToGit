@@ -7,9 +7,9 @@
 // };
 
 /* Commit messages */
-const README_MSG = 'Create README - LeetHub';
-const SUBMIT_MSG = 'Added solution - LeetHub';
-const UPDATE_MSG = 'Updated solution - LeetHub';
+const README_MSG = 'Create README';
+const SUBMIT_MSG = 'Added solution';
+const UPDATE_MSG = 'Updated solution';
 let START_MONITOR = true;
 const toKebabCase = (string) => {
   return string
@@ -62,7 +62,7 @@ function getCode() {
   var editorContent = editor.getValue();
   var para = document.createElement("pre");
   para.innerText+=editorContent;
-  para.setAttribute("id","codeDataLeetHub")
+  para.setAttribute("id","codeDataLeetToGit")
   document.body.appendChild(para);
   `;
 
@@ -74,7 +74,7 @@ function getCode() {
     document.head ||
     document.documentElement
   ).appendChild(script);
-  const text = document.getElementById('codeDataLeetHub').innerText;
+  const text = document.getElementById('codeDataLeetToGit').innerText;
 
   const nodeDeletionScript = `
   document.body.removeChild(para)

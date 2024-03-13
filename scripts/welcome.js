@@ -66,7 +66,7 @@ const statusCode = (res, status, name) => {
       });
       /* Set Repo Hook */
       chrome.storage.local.set(
-        { leethub_hook: res.full_name },
+        { leettogit_hook: res.full_name },
         () => {
           console.log('Successfully set new repo hook');
         },
@@ -83,7 +83,7 @@ const createRepo = (token, name) => {
     private: true,
     auto_init: true,
     description:
-      'Collection of LeetCode questions to ace the coding interview! - Created using [LeetHub v3](https://github.com/raphaelheinz/LeetHub-3.0)',
+      'Collection of LeetCode questions to ace the coding interview! - Created using [LeetToGit](https://github.com/itsluminous/LeetToGit)',
   };
   data = JSON.stringify(data);
 
@@ -107,7 +107,7 @@ const linkStatusCode = (status, name) => {
     case 301:
       $('#success').hide();
       $('#error').html(
-        `Error linking <a target="blank" href="${`https://github.com/${name}`}">${name}</a> to LeetHub. <br> This repository has been moved permenantly. Try creating a new one.`,
+        `Error linking <a target="blank" href="${`https://github.com/${name}`}">${name}</a> to LeetToGit. <br> This repository has been moved permenantly. Try creating a new one.`,
       );
       $('#error').show();
       break;
@@ -115,7 +115,7 @@ const linkStatusCode = (status, name) => {
     case 403:
       $('#success').hide();
       $('#error').html(
-        `Error linking <a target="blank" href="${`https://github.com/${name}`}">${name}</a> to LeetHub. <br> Forbidden action. Please make sure you have the right access to this repository.`,
+        `Error linking <a target="blank" href="${`https://github.com/${name}`}">${name}</a> to LeetToGit. <br> Forbidden action. Please make sure you have the right access to this repository.`,
       );
       $('#error').show();
       break;
@@ -123,7 +123,7 @@ const linkStatusCode = (status, name) => {
     case 404:
       $('#success').hide();
       $('#error').html(
-        `Error linking <a target="blank" href="${`https://github.com/${name}`}">${name}</a> to LeetHub. <br> Resource not found. Make sure you enter the right repository name.`,
+        `Error linking <a target="blank" href="${`https://github.com/${name}`}">${name}</a> to LeetToGit. <br> Resource not found. Make sure you enter the right repository name.`,
       );
       $('#error').show();
       break;
@@ -157,10 +157,10 @@ const linkRepo = (token, name) => {
           // unable to gain access to repo in commit mode. Must switch to hook mode.
           /* Set mode type to hook */
           chrome.storage.local.set({ mode_type: 'hook' }, () => {
-            console.log(`Error linking ${name} to LeetHub`);
+            console.log(`Error linking ${name} to LeetToGit`);
           });
           /* Set Repo Hook to NONE */
-          chrome.storage.local.set({ leethub_hook: null }, () => {
+          chrome.storage.local.set({ leettogit_hook: null }, () => {
             console.log('Defaulted repo hook to NONE');
           });
 
@@ -177,14 +177,14 @@ const linkRepo = (token, name) => {
             () => {
               $('#error').hide();
               $('#success').html(
-                `Successfully linked <a target="blank" href="${res.html_url}">${name}</a> to LeetHub. Start <a href="http://leetcode.com">LeetCoding</a> now!`,
+                `Successfully linked <a target="blank" href="${res.html_url}">${name}</a> to LeetToGit. Start <a href="http://leetcode.com">LeetCoding</a> now!`,
               );
               $('#success').show();
               $('#unlink').show();
             },
           );
           /* Set Repo Hook */
-          chrome.storage.local.set({ leethub_hook: res.full_name })
+          chrome.storage.local.set({ leettogit_hook: res.full_name })
             .then(() => {
               console.log('Successfully set new repo hook');
               return chrome.storage.local.get('stats')
@@ -221,7 +221,7 @@ const unlinkRepo = () => {
     console.log(`Unlinking repo`);
   });
   /* Set Repo Hook to NONE */
-  chrome.storage.local.set({ leethub_hook: null }, () => {
+  chrome.storage.local.set({ leettogit_hook: null }, () => {
     console.log('Setting repo hook to NONE');
   });
 
@@ -266,24 +266,24 @@ $('#hook_button').on('click', () => {
       - step 3: if (1), POST request to repoName (iff option = create new repo) ; else display error message.
       - step 4: if proceed from 3, hide hook_mode and display commit_mode (show stats e.g: files pushed/questions-solved/leaderboard)
     */
-    chrome.storage.local.get('leethub_token', (data) => {
-      const token = data.leethub_token;
+    chrome.storage.local.get('leettogit_token', (data) => {
+      const token = data.leettogit_token;
       if (token === null || token === undefined) {
         /* Not authorized yet. */
         $('#error').text(
-          'Authorization error - Grant LeetHub access to your GitHub account to continue (launch extension to proceed)',
+          'Authorization error - Grant LeetToGit access to your GitHub account to continue (launch extension to proceed)',
         );
         $('#error').show();
         $('#success').hide();
       } else if (option() === 'new') {
         createRepo(token, repositoryName());
       } else {
-        chrome.storage.local.get('leethub_username', (data2) => {
-          const username = data2.leethub_username;
+        chrome.storage.local.get('leettogit_username', (data2) => {
+          const username = data2.leettogit_username;
           if (!username) {
             /* Improper authorization. */
             $('#error').text(
-              'Improper Authorization error - Grant LeetHub access to your GitHub account to continue (launch extension to proceed)',
+              'Improper Authorization error - Grant LeetToGit access to your GitHub account to continue (launch extension to proceed)',
             );
             $('#error').show();
             $('#success').hide();
@@ -310,12 +310,12 @@ chrome.storage.local.get('mode_type', (data) => {
 
   if (mode && mode === 'commit') {
     /* Check if still access to repo */
-    chrome.storage.local.get('leethub_token', (data2) => {
-      const token = data2.leethub_token;
+    chrome.storage.local.get('leettogit_token', (data2) => {
+      const token = data2.leettogit_token;
       if (token === null || token === undefined) {
         /* Not authorized yet. */
         $('#error').text(
-          'Authorization error - Grant LeetHub access to your GitHub account to continue (click LeetHub extension on the top right to proceed)',
+          'Authorization error - Grant LeetToGit access to your GitHub account to continue (click LeetToGit extension on the top right to proceed)',
         );
         $('#error').show();
         $('#success').hide();
@@ -325,12 +325,12 @@ chrome.storage.local.get('mode_type', (data) => {
         document.getElementById('commit_mode').style.display = 'none';
       } else {
         /* Get access to repo */
-        chrome.storage.local.get('leethub_hook', (repoName) => {
-          const hook = repoName.leethub_hook;
+        chrome.storage.local.get('leettogit_hook', (repoName) => {
+          const hook = repoName.leettogit_hook;
           if (!hook) {
             /* Not authorized yet. */
             $('#error').text(
-              'Improper Authorization error - Grant LeetHub access to your GitHub account to continue (click LeetHub extension on the top right to proceed)',
+              'Improper Authorization error - Grant LeetToGit access to your GitHub account to continue (click LeetToGit extension on the top right to proceed)',
             );
             $('#error').show();
             $('#success').hide();

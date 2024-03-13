@@ -28,9 +28,9 @@ const languages = {
 }
 
 /* Commit messages */
-const readmeMsg = 'Create README - LeetHub';
-const discussionMsg = 'Prepend discussion post - LeetHub';
-const createNotesMsg = 'Attach NOTES - LeetHub';
+const readmeMsg = 'Create README';
+const discussionMsg = 'Prepend discussion post';
+const createNotesMsg = 'Attach NOTES';
 
 // problem types
 const NORMAL_PROBLEM = 0;
@@ -181,24 +181,24 @@ function uploadGit(
   let hook;
 
   return chrome.storage.local
-    .get('leethub_token')
-    .then(({ leethub_token }) => {
-      token = leethub_token;
-      if (leethub_token == undefined) {
-        throw new Error('leethub token is undefined');
+    .get('leettogit_token')
+    .then(({ leettogit_token }) => {
+      token = leettogit_token;
+      if (leettogit_token == undefined) {
+        throw new Error('leettogit token is undefined');
       }
       return chrome.storage.local.get('mode_type');
     })
     .then(({ mode_type }) => {
       if (mode_type !== 'commit') {
-        throw new Error('leethub mode is not commit');
+        throw new Error('leettogit mode is not commit');
       }
-      return chrome.storage.local.get('leethub_hook');
+      return chrome.storage.local.get('leettogit_hook');
     })
-    .then(({ leethub_hook }) => {
-      hook = leethub_hook;
+    .then(({ leettogit_hook }) => {
+      hook = leettogit_hook;
       if (!hook) {
-        throw new Error('leethub hook not defined');
+        throw new Error('leettogit hook not defined');
       }
       return chrome.storage.local.get('stats');
     })
@@ -291,7 +291,7 @@ function addLeadingZeros(title) {
 }
 
 function formatStats(time, timePercentile, space, spacePercentile) {
-  return `Time: ${time} (${timePercentile}%), Space: ${space} (${spacePercentile}%) - LeetHub`;
+  return `Time: ${time} (${timePercentile}%), Space: ${space} (${spacePercentile}%)`;
 }
 
 /* Discussion Link - When a user makes a new post, the link is prepended to the README for that problem.*/
@@ -328,8 +328,8 @@ document.addEventListener('click', event => {
 });
 
 function LeetCodeV1() {
-  this.progressSpinnerElementId = 'leethub_progress_elem';
-  this.progressSpinnerElementClass = 'leethub_progress';
+  this.progressSpinnerElementId = 'leettogit_progress_elem';
+  this.progressSpinnerElementClass = 'leettogit_progress';
   this.injectSpinnerStyle();
 }
 LeetCodeV1.prototype.init = async function () { };
@@ -406,7 +406,7 @@ LeetCodeV1.prototype.findAndUploadCode = function (
               slicedText.indexOf("'") + 1,
               slicedText.lastIndexOf("'"),
             );
-            commitMsg = `Time: ${resultRuntime}, Memory: ${resultMemory} - LeetHub`;
+            commitMsg = `Time: ${resultRuntime}, Memory: ${resultMemory}`;
           }
 
           if (code != null) {
@@ -527,7 +527,7 @@ LeetCodeV1.prototype.parseStats = function () {
   const space = probStats[2].textContent;
   const spacePercentile = probStats[3].textContent;
 
-  return `Time: ${time} (${timePercentile}), Space: ${space} (${spacePercentile}) - LeetHub`;
+  return `Time: ${time} (${timePercentile}), Space: ${space} (${spacePercentile})`;
 };
 /* Parser function for the question, question title, question difficulty, and tags */
 LeetCodeV1.prototype.parseQuestion = function () {
@@ -580,10 +580,10 @@ LeetCodeV1.prototype.parseQuestion = function () {
 /* Injects a spinner on left side to the "Run Code" button */
 LeetCodeV1.prototype.startSpinner = function () {
   try {
-    elem = document.getElementById('leethub_progress_anchor_element');
+    elem = document.getElementById('leettogit_progress_anchor_element');
     if (!elem) {
       elem = document.createElement('span');
-      elem.id = 'leethub_progress_anchor_element';
+      elem.id = 'leettogit_progress_anchor_element';
       elem.style = 'margin-right: 20px;padding-top: 2px;';
     }
     elem.innerHTML = `<div id="${this.progressSpinnerElementId}" class="${this.progressSpinnerElementClass}"></div>`;
@@ -621,7 +621,7 @@ LeetCodeV1.prototype.insertToAnchorElement = function (elem) {
     }
   }
 };
-/* Creates a ✔️ tick mark before "Run Code" button signaling LeetHub has done its job */
+/* Creates a ✔️ tick mark before "Run Code" button signaling LeetToGit has done its job */
 LeetCodeV1.prototype.markUploaded = function () {
   elem = document.getElementById(this.progressSpinnerElementId);
   if (elem) {
@@ -644,8 +644,8 @@ LeetCodeV1.prototype.markUploadFailed = function () {
 
 function LeetCodeV2() {
   this.submissionData;
-  this.progressSpinnerElementId = 'leethub_progress_elem';
-  this.progressSpinnerElementClass = 'leethub_progress';
+  this.progressSpinnerElementId = 'leettogit_progress_elem';
+  this.progressSpinnerElementClass = 'leettogit_progress';
   this.injectSpinnerStyle();
 }
 LeetCodeV2.prototype.init = async function () {
@@ -863,10 +863,10 @@ LeetCodeV2.prototype.parseDifficulty = function () {
   return 'unknown';
 };
 LeetCodeV2.prototype.startSpinner = function () {
-  let elem = document.getElementById('leethub_progress_anchor_element');
+  let elem = document.getElementById('leettogit_progress_anchor_element');
   if (!elem) {
     elem = document.createElement('span');
-    elem.id = 'leethub_progress_anchor_element';
+    elem.id = 'leettogit_progress_anchor_element';
     elem.style = 'margin-right: 20px;padding-top: 2px;';
   }
   elem.innerHTML = `<div id="${this.progressSpinnerElementId}" class="${this.progressSpinnerElementClass}"></div>`;
@@ -923,11 +923,11 @@ LeetCodeV2.prototype.markUploadFailed = function () {
 /* Sync to local storage */
 chrome.storage.local.get('isSync', data => {
   keys = [
-    'leethub_token',
-    'leethub_username',
-    'pipe_leethub',
+    'leettogit_token',
+    'leettogit_username',
+    'pipe_leettogit',
     'stats',
-    'leethub_hook',
+    'leettogit_hook',
     'mode_type',
   ];
   if (!data || !data.isSync) {
@@ -937,10 +937,10 @@ chrome.storage.local.get('isSync', data => {
       });
     });
     chrome.storage.local.set({ isSync: true }, data => {
-      console.log('LeetHub Synced to local values');
+      console.log('LeetToGit Synced to local values');
     });
   } else {
-    console.log('LeetHub Local storage already synced!');
+    console.log('LeetToGit Local storage already synced!');
   }
 });
 

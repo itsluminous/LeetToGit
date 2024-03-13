@@ -19,8 +19,8 @@ $('#hook_URL').attr(
   chrome.runtime.getURL('welcome.html')
 );
 
-chrome.storage.local.get('leethub_token', (data) => {
-  const token = data.leethub_token;
+chrome.storage.local.get('leettogit_token', (data) => {
+  const token = data.leettogit_token;
   if (token === null || token === undefined) {
     action = true;
     $('#auth_mode').show();
@@ -38,7 +38,7 @@ chrome.storage.local.get('leethub_token', (data) => {
               $('#commit_mode').show();
               /* Get problem stats and repo link */
               chrome.storage.local.get(
-                ['stats', 'leethub_hook'],
+                ['stats', 'leettogit_hook'],
                 (data3) => {
                   const { stats } = data3;
                   if (stats && stats.solved) {
@@ -47,10 +47,10 @@ chrome.storage.local.get('leethub_token', (data) => {
                     $('#p_solved_medium').text(stats.medium);
                     $('#p_solved_hard').text(stats.hard);
                   }
-                  const leethubHook = data3.leethub_hook;
-                  if (leethubHook) {
+                  const leettogitHook = data3.leettogit_hook;
+                  if (leettogitHook) {
                     $('#repo_url').html(
-                      `<a target="blank" style="color: cadetblue !important; font-size:0.8em;" href="https://github.com/${leethubHook}">${leethubHook}</a>`,
+                      `<a target="blank" style="color: cadetblue !important; font-size:0.8em;" href="https://github.com/${leettogitHook}">${leettogitHook}</a>`,
                     );
                   }
                 },
@@ -61,7 +61,7 @@ chrome.storage.local.get('leethub_token', (data) => {
           });
         } else if (xhr.status === 401) {
           // bad oAuth: reset token and redirect to authorization process again!
-          chrome.storage.local.set({ leethub_token: null }, () => {
+          chrome.storage.local.set({ leettogit_token: null }, () => {
             console.log('BAD oAuth!!! Redirecting back to oAuth process');
             action = true;
             $('#auth_mode').show();
