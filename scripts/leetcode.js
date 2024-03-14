@@ -604,6 +604,16 @@ LeetCode.prototype.markUploadFailed = function () {
     elem.style = style;
   }
 };
+LeetCode.prototype.nowListening = function () {
+  let elem = document.getElementById('leettogit_progress_anchor_element');
+  if (!elem) {
+    elem = document.createElement('span');
+    elem.id = 'leettogit_progress_anchor_element';
+    elem.style = 'margin-right: 20px;padding-top: 2px;';
+  }
+  elem.innerHTML = `<div>© LeetToGit</div>`;
+  this.insertToAnchorElement(elem);
+};
 
 /* Sync to local storage */
 chrome.storage.local.get('isSync', data => {
@@ -746,6 +756,7 @@ const observer = new MutationObserver(function (_mutations, observer) {
 
     const leetCode = new LeetCode();
     submitBtn.addEventListener('click', () => loader(leetCode));
+    leetCode.nowListening();
     // if(textarea)
     //   textarea.addEventListener('keydown', e => submitByShortcuts(e, leetCode));
   }
