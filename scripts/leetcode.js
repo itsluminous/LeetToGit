@@ -1065,12 +1065,13 @@ const observer = new MutationObserver(function (_mutations, observer) {
     return;
   }
 
-  if(v2SubmitBtn && textarea) {
+  if(v2SubmitBtn) {
     observer.disconnect();
 
     const leetCode = new LeetCodeV2();
     v2SubmitBtn.addEventListener('click', () => loader(leetCode));
-    textarea.addEventListener('keydown', e => submitByShortcuts(e, leetCode));
+    if(textarea)
+      textarea.addEventListener('keydown', e => submitByShortcuts(e, leetCode));
   }
 });
 
@@ -1079,4 +1080,4 @@ setTimeout(() => {
     childList: true,
     subtree: true,
   });
-}, 2000);
+}, 5000);
