@@ -604,15 +604,18 @@ LeetCode.prototype.markUploadFailed = function () {
     elem.style = style;
   }
 };
-LeetCode.prototype.nowListening = function () {
-  let elem = document.getElementById('leettogit_progress_anchor_element');
-  if (!elem) {
-    elem = document.createElement('span');
-    elem.id = 'leettogit_progress_anchor_element';
-    elem.style = 'margin-right: 20px;padding-top: 2px;';
+LeetCode.prototype.addManualSubmitButton = function () {
+  var submitButton = document.createElement('button');
+  submitButton.className = 'relative inline-flex gap-2 items-center justify-center font-medium cursor-pointer focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-colors bg-transparent enabled:hover:bg-fill-secondary enabled:active:bg-fill-primary text-caption rounded text-text-primary group ml-auto p-1';
+  submitButton.textContent = 'Push To Git';
+  submitButton.addEventListener('mouseenter', () => {
+    var confirmDialog = confirm('Submit to Git?');
+    if (confirmDialog) loader(this)});
+
+  if (checkElem(document.getElementsByClassName('ml-auto'))) {
+    const target = document.getElementsByClassName('ml-auto')[0].parentElement;
+    target.prepend(submitButton);
   }
-  elem.innerHTML = `<div>© LeetToGit</div>`;
-  this.insertToAnchorElement(elem);
 };
 
 /* Sync to local storage */
@@ -756,7 +759,8 @@ const observer = new MutationObserver(function (_mutations, observer) {
 
     const leetCode = new LeetCode();
     submitBtn.addEventListener('click', () => loader(leetCode));
-    leetCode.nowListening();
+    leetCode.addManualSubmitButton();
+
     // if(textarea)
     //   textarea.addEventListener('keydown', e => submitByShortcuts(e, leetCode));
   }
