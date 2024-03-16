@@ -622,7 +622,11 @@ LeetCode.prototype.markUploadFailed = function () {
   }
 };
 LeetCode.prototype.addManualSubmitButton = function () {
+  let elem = document.getElementById('manualsubmit');
+  if (elem) return;
+
   var submitButton = document.createElement('button');
+  submitButton.id = 'manualsubmit';
   submitButton.className = 'relative inline-flex gap-2 items-center justify-center font-medium cursor-pointer focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-colors bg-transparent enabled:hover:bg-fill-secondary enabled:active:bg-fill-primary text-caption rounded text-text-primary group ml-auto p-1';
   submitButton.textContent = 'Push To ';
   submitButton.appendChild(getGitIcon());
@@ -789,4 +793,10 @@ setTimeout(() => {
     childList: true,
     subtree: true,
   });
-}, 5000);
+}, 3000);
+
+// add manual submit button if it does not exist already
+setTimeout(() => {
+  const leetCode = new LeetCode();
+  leetCode.addManualSubmitButton();
+}, 6000);
