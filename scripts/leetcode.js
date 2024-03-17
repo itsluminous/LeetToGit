@@ -622,17 +622,30 @@ LeetCode.prototype.markUploadFailed = function () {
   }
 };
 LeetCode.prototype.addManualSubmitButton = function () {
-  let elem = document.getElementById('manualsubmit');
-  if (elem) return;
+  let elem = document.getElementById('manualGitSubmit');
+  const domain = document.URL.match(/:\/\/(www\.)?(.[^/:]+)/)[2].split('.')[0];
+  if (elem || domain != 'leetcode' ) {
+    return;
+  }
 
   var submitButton = document.createElement('button');
-  submitButton.id = 'manualsubmit';
+  submitButton.id = 'manualGitSubmit';
   submitButton.className = 'relative inline-flex gap-2 items-center justify-center font-medium cursor-pointer focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-colors bg-transparent enabled:hover:bg-fill-secondary enabled:active:bg-fill-primary text-caption rounded text-text-primary group ml-auto p-1';
   submitButton.textContent = 'Push To ';
   submitButton.appendChild(getGitIcon());
+
+  let timer;
   submitButton.addEventListener('mouseenter', () => {
-    var confirmDialog = confirm('Push code to Git?');
-    if (confirmDialog) loader(this)});
+      timer = setTimeout(() => {
+          var confirmDialog = confirm('Push code to GitHub?');
+          if (confirmDialog) {
+              loader(this);
+          }
+      }, 300);
+  });
+  submitButton.addEventListener('mouseleave', () => {
+      clearTimeout(timer);
+  });
 
   if (checkElem(document.getElementsByClassName('ml-auto'))) {
     const target = document.getElementsByClassName('ml-auto')[0].parentElement;
