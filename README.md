@@ -5,9 +5,6 @@
   <a href="https://github.com/itsluminous/LeetToGit/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"/>
   </a>
-  <a href="https://github.com/itsluminous/LeetToGit/graphs/contributors" alt="Contributors">
-    <img src="https://img.shields.io/github/contributors/itsluminous/LeetToGit" />
-  </a>
 </p>
 <h1 align="center">
     <img src="assets/octocode.png" alt="LeetToGit" width="400">
@@ -80,4 +77,7 @@ npm run lint-test     # Test if code is linted properly
 Please help to further improve this awesome plugin! We would appreciate your support. Your pull requests are welcome!
 
 Don't forget to star this repository for further development of new features.
+
+## Reference
+This project is heavily inspired by [LeetHub-3.0](https://github.com/raphaelheinz/LeetHub-3.0)
 
