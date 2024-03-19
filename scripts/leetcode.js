@@ -647,8 +647,9 @@ LeetCode.prototype.addManualSubmitButton = function () {
       clearTimeout(timer);
   });
 
-  if (checkElem(document.getElementsByClassName('ml-auto'))) {
-    const target = document.getElementsByClassName('ml-auto')[0].parentElement;
+  let notesIcon = document.querySelectorAll('.ml-auto svg.fa-bookmark');
+  if (checkElem(notesIcon)) {
+    const target = notesIcon[0].closest('button.ml-auto').parentElement;
     target.prepend(submitButton);
   }
 };
