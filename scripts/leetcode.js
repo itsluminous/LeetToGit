@@ -351,16 +351,13 @@ function LeetCode() {
   this.injectSpinnerStyle();
 }
 LeetCode.prototype.init = async function () {
-  async function getSubmissionId() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const submissionsId = document.URL.match(/\/(\d+)(\/|\?|$)/);
-        if (submissionsId !== null){
-            resolve(submissionsId[1]); // '/problems/two-sum/post-solution?submissionId/999594717
-        }}, 4000);
-    });
+  const problem = document.URL.match(/leetcode.com\/problems\/([^\/]*)\//);
+  const val = await chrome.storage.local.get(problem[1]);
+  if(!val){
+    alert("Have you submitted this problem yet?");
+    return false;
   }
-  const submissionId = await getSubmissionId();
+  const submissionId = val[problem[1]]
 
   // Query for getting the solution runtime and memory stats, the code, the coding language, the question id, question title and question difficulty
   const submissionDetailsQuery = {
@@ -633,25 +630,24 @@ LeetCode.prototype.addManualSubmitButton = function () {
   submitButton.className = 'relative inline-flex gap-2 items-center justify-center font-medium cursor-pointer focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-colors bg-transparent enabled:hover:bg-fill-secondary enabled:active:bg-fill-primary text-caption rounded text-text-primary group ml-auto p-1';
   submitButton.textContent = 'Push To ';
   submitButton.appendChild(getGitIcon());
-
-  let timer;
-  submitButton.addEventListener('mouseenter', () => {
-      timer = setTimeout(() => {
-          var confirmDialog = confirm('Push code to GitHub?');
-          if (confirmDialog) {
-              loader(this);
-          }
-      }, 300);
-  });
-  submitButton.addEventListener('mouseleave', () => {
-      clearTimeout(timer);
-  });
+  submitButton.addEventListener('click', () => loader(this));
 
   let notesIcon = document.querySelectorAll('.ml-auto svg.fa-bookmark');
   if (checkElem(notesIcon)) {
     const target = notesIcon[0].closest('button.ml-auto').parentElement;
     target.prepend(submitButton);
   }
+};
+
+LeetCode.prototype.addUrlChangeListener = function () {
+  window.navigation.addEventListener("navigate", (event) => {
+    const problem = window.location.href.match(/leetcode.com\/problems\/(.*)\/submissions/);
+    const submissionId = window.location.href.match(/\/(\d+)(\/|\?|$)/);
+    if(problem && problem.length > 1 && submissionId && submissionId.length > 1){
+      chrome.storage.local.set({ [problem[1]]: submissionId[1] });
+      console.log(`${problem[1]} : ${submissionId[1]}`);
+    }
+  })
 };
 
 /* Sync to local storage */
@@ -809,8 +805,9 @@ setTimeout(() => {
   });
 }, 3000);
 
-// add manual submit button if it does not exist already
+// add url change listener & manual submit button if it does not exist already
 setTimeout(() => {
   const leetCode = new LeetCode();
   leetCode.addManualSubmitButton();
+  leetCode.addUrlChangeListener();
 }, 6000);
